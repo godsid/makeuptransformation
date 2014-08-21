@@ -1,4 +1,4 @@
-package com.webmanagement.startransform;
+package com.webmanagement.faceformers;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

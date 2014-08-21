@@ -6,30 +6,41 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.webmanagement.startransform.Step3Activity">
+    tools:context="com.webmanagement.faceformers.Step3Activity"
+    android:background="@color/background">
 
 
     <ImageView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="330dp"
         android:id="@+id/imageView"
         android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView2"
+        android:src="@drawable/step3"
+        android:layout_below="@+id/imageView"
         android:layout_centerHorizontal="true" />
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btFBShare"
-        android:layout_below="@+id/imageView"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/fb_share" />
+        android:src="@drawable/fb_share"
+        android:layout_below="@+id/imageView2"
+        android:layout_alignRight="@+id/btTWShare"
+        android:layout_alignEnd="@+id/btTWShare" />
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btTWShare"
+        android:src="@drawable/tw_share"
         android:layout_below="@+id/btFBShare"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/tw_share" />
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

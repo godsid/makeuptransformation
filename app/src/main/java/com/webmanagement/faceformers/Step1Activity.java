@@ -1,13 +1,8 @@
-package com.webmanagement.startransform;
+package com.webmanagement.faceformers;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,12 +18,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 
 
@@ -55,6 +44,7 @@ public class Step1Activity extends Activity {
                 Intent intentStep2 = new Intent(getApplicationContext(),Step2Activity.class);
                 try {
                     intentStep2.putExtra("imageMask",itemsArrayList.get(position).getString("mask"));
+                    intentStep2.putExtra("imageTitle",itemsArrayList.get(position).getString("title"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -62,7 +52,7 @@ public class Step1Activity extends Activity {
             }
         });
 
-        aq.ajax("http://192.168.1.5/app/mtf/items.php", JSONObject.class,3600,new AjaxCallback<JSONObject>(){
+        aq.ajax("http://review.edtguide.com/ftm/items.php", JSONObject.class,3600,new AjaxCallback<JSONObject>(){
             @Override
             public void callback(String url, JSONObject object, AjaxStatus status) {
                 JSONArray objectArray;

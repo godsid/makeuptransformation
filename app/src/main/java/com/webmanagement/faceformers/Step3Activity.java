@@ -1,4 +1,4 @@
-package com.webmanagement.startransform;
+package com.webmanagement.faceformers;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,11 +21,17 @@ import com.androidquery.AQuery;
 import java.io.File;
 import java.util.List;
 
+import static android.os.Environment.DIRECTORY_PICTURES;
+import static android.os.Environment.getExternalStoragePublicDirectory;
+
 
 public class Step3Activity extends Activity {
 
     AQuery aq;
-    String imageMask;
+    String outputName;
+    String imageTitle;
+    File path = getExternalStoragePublicDirectory(
+            DIRECTORY_PICTURES);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,30 +40,30 @@ public class Step3Activity extends Activity {
         ImageButton btFBShare = (ImageButton)findViewById(R.id.btFBShare);
         ImageButton btTWShare = (ImageButton)findViewById(R.id.btTWShare);
         aq = new AQuery(getApplicationContext());
-        //Bundle bundle = getIntent().getExtras();
-        //imageMask = bundle.getString("imageMask");
+        Bundle bundle = getIntent().getExtras();
+        outputName = bundle.getString("outputName");
+        imageTitle = bundle.getString("imageTitle");
 
-        aq.id(imageView).image(new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES),"tui.png"),0);
+        Bitmap outputBitmap = Image.decodeFile(new File(path,outputName));
 
+        imageView.setMaxWidth(outputBitmap.getWidth());
+        imageView.setMaxHeight(outputBitmap.getHeight());
 
-        //aq.id(imageView)
-                //.image(imageMask, true, true, 0, 0, null, AQuery.FADE_IN_NETWORK);
-
+        //imageView.setImageBitmap(outputBitmap);
+        aq.id(imageView).image(new File(path,outputName),0);
 
         btFBShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
 
-                shareFacebook("tui.png");
+                shareFacebook();
             }
         });
 
         btTWShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shareTwitter(imageMask);
+                shareTwitter();
             }
         });
     }
@@ -75,34 +81,28 @@ public class Step3Activity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_share) {
+            shareMore();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void shareFacebook(String imageMask){
+    private void shareFacebook(){
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
         shareIntent.setType("image/*");
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Coming soon ON Android");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, "eample");
-        shareIntent.putExtra(Intent.EXTRA_TITLE, "example");
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "example");
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, imageTitle);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, imageTitle);
+        shareIntent.putExtra(Intent.EXTRA_TITLE, imageTitle);
 
-
-        File path = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOWNLOADS);
-        File file = new File(path, imageMask);
+        File file = new File(path, outputName);
         Uri uri = Uri.fromFile(file);
 
         shareIntent.putExtra(Intent.EXTRA_STREAM,uri);
         Log.d("tui",uri.toString());
 
-        startActivity(Intent.createChooser(shareIntent, "Share"));
-
-        /*
-
+        //startActivity(Intent.createChooser(shareIntent, "Share"));
 
         PackageManager pm = getPackageManager();
         List<ResolveInfo> activityList = pm.queryIntentActivities(shareIntent, 0);
@@ -118,22 +118,24 @@ public class Step3Activity extends Activity {
                 startActivity(shareIntent);
                 break;
             }
-        }*/
+        }
     }
-    private void shareTwitter(String imageMask){
+    private void shareTwitter(){
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
         shareIntent.setType("image/*");
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Coming soon On Android");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, "eample");
-        shareIntent.putExtra(Intent.EXTRA_TITLE, "example");
-        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "example");
-        shareIntent.putExtra(Intent.EXTRA_STREAM, imageMask);
+
+        File file = new File(path, outputName);
+        Uri uri = Uri.fromFile(file);
+
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, imageTitle);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, imageTitle);
+        shareIntent.putExtra(Intent.EXTRA_TITLE, imageTitle);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
 
         PackageManager pm = getPackageManager();
         List<ResolveInfo> activityList = pm.queryIntentActivities(shareIntent, 0);
         for (final ResolveInfo app : activityList){
-            Log.d("tui", app.activityInfo.name);
             if ((app.activityInfo.name).contains("twitter")){
                 final ActivityInfo activity = app.activityInfo;
                 final ComponentName name = new ComponentName(activity.applicationInfo.packageName, activity.name);
@@ -144,5 +146,22 @@ public class Step3Activity extends Activity {
                 break;
             }
         }
+    }
+
+    private void shareMore(){
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.setType("image/*");
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, imageTitle);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, imageTitle);
+        shareIntent.putExtra(Intent.EXTRA_TITLE, imageTitle);
+
+        File file = new File(path, outputName);
+        Uri uri = Uri.fromFile(file);
+
+        shareIntent.putExtra(Intent.EXTRA_STREAM,uri);
+
+
+        startActivity(Intent.createChooser(shareIntent, "Share"));
     }
 }
