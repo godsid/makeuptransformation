@@ -26,21 +26,12 @@
         android:layout_below="@+id/imageView"
         android:layout_centerHorizontal="true" />
 
-    <ImageButton
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btFBShare"
         android:src="@drawable/fb_share"
         android:layout_below="@+id/imageView2"
-        android:layout_alignRight="@+id/btTWShare"
-        android:layout_alignEnd="@+id/btTWShare" />
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btTWShare"
-        android:src="@drawable/tw_share"
-        android:layout_below="@+id/btFBShare"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

@@ -1,6 +1,6 @@
 package com.webmanagement.faceformers;
 
-import android.app.Activity;
+import android.app.*;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 
 public class Step1Activity extends Activity {
-
+    public MyGoogleAnalytics googleAnalytics;
     AQuery aq;
     ArrayList<JSONObject> itemsArrayList;
     ItemsAdapter itemAdapter;
@@ -32,6 +32,10 @@ public class Step1Activity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step1);
         GridView chooseGridView = (GridView) findViewById(R.id.chooseGridView);
+
+        //Google Analytic Tracking
+        googleAnalytics = new MyGoogleAnalytics(this);
+        googleAnalytics.trackPage("choose photo");
 
         aq = new AQuery(getApplicationContext());
         itemsArrayList = new ArrayList<JSONObject>();

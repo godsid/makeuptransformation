@@ -13,10 +13,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.androidquery.AQuery;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 
 import java.io.File;
 import java.util.List;
@@ -26,19 +28,27 @@ import static android.os.Environment.getExternalStoragePublicDirectory;
 
 
 public class Step3Activity extends Activity {
-
+    public InterstitialAd interstitialAds;
+    public AdRequest adRequest;
+    MyGoogleAnalytics googleAnalytics;
+    static final int SHARE_REQUEST_CODE = 1;
     AQuery aq;
     String outputName;
     String imageTitle;
     File path = getExternalStoragePublicDirectory(
             DIRECTORY_PICTURES);
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step3);
         ImageView imageView = (ImageView)findViewById(R.id.imageView);
-        ImageButton btFBShare = (ImageButton)findViewById(R.id.btFBShare);
-        ImageButton btTWShare = (ImageButton)findViewById(R.id.btTWShare);
+        ImageView btFBShare = (ImageView)findViewById(R.id.btFBShare);
+
+        googleAnalytics = new MyGoogleAnalytics(this);
+        googleAnalytics.trackPage("take photo");
+
         aq = new AQuery(getApplicationContext());
         Bundle bundle = getIntent().getExtras();
         outputName = bundle.getString("outputName");
@@ -51,21 +61,16 @@ public class Step3Activity extends Activity {
 
         //imageView.setImageBitmap(outputBitmap);
         aq.id(imageView).image(new File(path,outputName),0);
-
+        requestAds();
         btFBShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                shareFacebook();
+               shareFacebook();
             }
         });
 
-        btTWShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                shareTwitter();
-            }
-        });
+
     }
 
     @Override
@@ -100,9 +105,6 @@ public class Step3Activity extends Activity {
         Uri uri = Uri.fromFile(file);
 
         shareIntent.putExtra(Intent.EXTRA_STREAM,uri);
-        Log.d("tui",uri.toString());
-
-        //startActivity(Intent.createChooser(shareIntent, "Share"));
 
         PackageManager pm = getPackageManager();
         List<ResolveInfo> activityList = pm.queryIntentActivities(shareIntent, 0);
@@ -115,7 +117,7 @@ public class Step3Activity extends Activity {
                 shareIntent.addCategory(Intent.CATEGORY_LAUNCHER);
                 shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
                 shareIntent.setComponent(name);
-                startActivity(shareIntent);
+                startActivityForResult(shareIntent, SHARE_REQUEST_CODE);
                 break;
             }
         }
@@ -132,7 +134,7 @@ public class Step3Activity extends Activity {
         shareIntent.putExtra(Intent.EXTRA_TEXT, imageTitle);
         shareIntent.putExtra(Intent.EXTRA_TITLE, imageTitle);
         shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-
+        Boolean isFacebook = false;
         PackageManager pm = getPackageManager();
         List<ResolveInfo> activityList = pm.queryIntentActivities(shareIntent, 0);
         for (final ResolveInfo app : activityList){
@@ -142,9 +144,13 @@ public class Step3Activity extends Activity {
                 shareIntent.addCategory(Intent.CATEGORY_LAUNCHER);
                 shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
                 shareIntent.setComponent(name);
-                startActivity(shareIntent);
+                startActivityForResult(shareIntent, SHARE_REQUEST_CODE);
+                isFacebook = true;
                 break;
             }
+        }
+        if(!isFacebook){
+            shareMore();
         }
     }
 
@@ -158,10 +164,46 @@ public class Step3Activity extends Activity {
 
         File file = new File(path, outputName);
         Uri uri = Uri.fromFile(file);
-
         shareIntent.putExtra(Intent.EXTRA_STREAM,uri);
-
-
-        startActivity(Intent.createChooser(shareIntent, "Share"));
+        startActivityForResult(Intent.createChooser(shareIntent, "Share"), SHARE_REQUEST_CODE);
     }
+    private void requestAds(){
+        /*******************************************************/
+        //Create the interstitial Ads.
+        interstitialAds = new InterstitialAd(this);
+        interstitialAds.setAdUnitId(Config.adsInterstitialUnitIDFullPage);
+        interstitialAds.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                //super.onAdLoaded();
+                Log.d("tui","interstitial Ads Loaded");
+            }
+            @Override
+            public void onAdClosed() {
+                Log.d("tui","interstitial Ads Close");
+                interstitialAds.loadAd(adRequest);
+                //super.onAdClosed();
+            }
+        });
+        // Create ad request.
+        adRequest = new AdRequest.Builder()
+                .addKeyword(Config.adsInterstitialKeyword)
+                .build();
+        // Begin loading your interstitial.
+        interstitialAds.loadAd(adRequest);
+
+        /*******************************************************/
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==SHARE_REQUEST_CODE){
+            if(interstitialAds.isLoaded()) {
+                interstitialAds.show();
+            }
+        }
+
+    }
+
+
 }

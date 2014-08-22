@@ -24,5 +24,6 @@
         android:id="@+id/splash_version"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:paddingTop="100dp" />
+        android:paddingTop="100dp"
+        android:visibility="invisible" />
 </RelativeLayout>

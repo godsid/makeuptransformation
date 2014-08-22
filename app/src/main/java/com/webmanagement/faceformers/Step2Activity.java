@@ -10,16 +10,13 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.androidquery.AQuery;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -29,38 +26,31 @@ import static android.os.Environment.*;
 
 
 public class Step2Activity extends Activity {
-    BitmapFactory.Options options;
+    MyGoogleAnalytics googleAnalytics;
     File path = getExternalStoragePublicDirectory(
             DIRECTORY_PICTURES);
-    String outputName = "faceformers.jpg";
+    String outputName ;
     AQuery aq;;
     String imageMask;
     String imageTitle;
-    Bitmap bitmapCover;
-    File coverFile;
-    Bitmap preset;
     ImageView makerImageView;
-    DisplayMetrics displayScreen = new DisplayMetrics();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step2);
         makerImageView = (ImageView)findViewById(R.id.makerImageView);
-        ImageView cameraImageView = (ImageView)findViewById(R.id.cameraImageView);
 
+        googleAnalytics = new MyGoogleAnalytics(this);
+        googleAnalytics.trackPage("take photo");
+
+        outputName = "faceformers_"+DateTime.getCurrentTimeStamp("yyyy-MM-dd_HHmmss")+".jpg";
+        Log.d("tui",outputName);
+        outputName = "faceformers_.jpg";
         Bundle bundle = getIntent().getExtras();
         imageMask = bundle.getString("imageMask");
         imageTitle = bundle.getString("imageTitle");
         aq = new AQuery(getApplicationContext());
-
-
-        /*aq.download(imageMask,new File(path,imageMask),new AjaxCallback<File>(){
-            @Override
-            public void callback(String url, File object, AjaxStatus status) {
-                coverFile = object;
-            }
-        });*/
 
         aq.id(makerImageView)
                 .image(imageMask, true, true, 0, 0, null, AQuery.FADE_IN_NETWORK);
@@ -71,6 +61,7 @@ public class Step2Activity extends Activity {
                 startCameraActivity();
             }
         });
+        //Google Analytic Tracking
     }
 
 
@@ -94,9 +85,6 @@ public class Step2Activity extends Activity {
     }
 
     protected void startCameraActivity() {
-        //String picTime = String.valueOf(new Date().getTime());
-        //File takePhotoFile = new File(Environment.getExternalStoragePublicDirectory(
-        //        Environment.DIRECTORY_PICTURES),"xxxx.jpg");
         Intent intentCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intentCamera.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile( new File(path,outputName)));
         startActivityForResult(intentCamera, 0);
@@ -114,28 +102,25 @@ public class Step2Activity extends Activity {
 
     private void mergeImage(){
         try {
+            OutputStream os = null;
             Bitmap maker = ((BitmapDrawable)makerImageView.getDrawable()).getBitmap();
-            //Bitmap maker = Image.decodeFile(new File(Environment.getExternalStoragePublicDirectory(
-            //        Environment.DIRECTORY_DOWNLOADS),"1.png"));
             Bitmap cover =  Image.decodeFile(new File(path, outputName));
-
             int width = maker.getWidth()/2;
             int height = maker.getHeight()/2;
-
-
             cover =  Image.scaleCropToFit(cover,width,height);
-            //cover = Bitmap.createScaledBitmap(cover,width,height,false);
-
-            //Log.d("tui",String.valueOf(maker.getWidth()));
             Bitmap cs = Bitmap.createBitmap(maker.getWidth(), maker.getHeight(), Bitmap.Config.ARGB_8888);
             Canvas comboImage = new Canvas(cs);
 
             comboImage.drawBitmap(maker,new Matrix(),null);
             comboImage.drawBitmap(cover,(maker.getWidth()/2),(maker.getHeight()/2),null);
+            //Draw logo
 
-            //comboImage.drawBitmap(cover, new Rect(250,250,250,250),new Rect(0,0,250,250),null);
+            Bitmap waterMask = BitmapFactory.decodeResource(getResources(),R.drawable.watermask);
+            waterMask = Bitmap.createScaledBitmap(waterMask
+                        ,waterMask.getWidth()/2,waterMask.getHeight()/2,false);
+            Log.d("tui",String.valueOf(width));
 
-            OutputStream os = null;
+            comboImage.drawBitmap(waterMask,5,(maker.getHeight()- waterMask.getHeight()),null);
 
             os = new FileOutputStream(new File(path,outputName));
             cs.compress(Bitmap.CompressFormat.JPEG, 80, os);
