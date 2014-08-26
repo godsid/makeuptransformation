@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
@@ -26,12 +27,14 @@ public class Step1Activity extends Activity {
     AQuery aq;
     ArrayList<JSONObject> itemsArrayList;
     ItemsAdapter itemAdapter;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step1);
         GridView chooseGridView = (GridView) findViewById(R.id.chooseGridView);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         //Google Analytic Tracking
         googleAnalytics = new MyGoogleAnalytics(this);
@@ -56,7 +59,8 @@ public class Step1Activity extends Activity {
             }
         });
 
-        aq.ajax("http://review.edtguide.com/ftm/items.php", JSONObject.class,3600,new AjaxCallback<JSONObject>(){
+        aq.progress(R.id.progressBar)
+                .ajax("http://review.edtguide.com/ftm/items.php", JSONObject.class,0,new AjaxCallback<JSONObject>(){
             @Override
             public void callback(String url, JSONObject object, AjaxStatus status) {
                 JSONArray objectArray;

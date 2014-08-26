@@ -14,12 +14,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/progressBar"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignTop="@+id/chooseGridView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="146dp" />
 
     <GridView
         android:layout_width="wrap_content"
-        android:layout_height="330dp"
+        android:layout_height="380dp"
         android:id="@+id/chooseGridView"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -36,6 +37,7 @@
         android:id="@+id/imageView"
         android:src="@drawable/step1"
         android:layout_below="@+id/chooseGridView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
 </RelativeLayout>

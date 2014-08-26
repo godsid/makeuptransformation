@@ -9,6 +9,14 @@
     tools:context="com.webmanagement.faceformers.Step2Activity"
     android:background="@color/background">
 
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
     <ImageView
         android:id="@+id/makerImageView"
         android:layout_width="fill_parent"
@@ -25,14 +33,14 @@
         android:layout_below="@+id/makerImageView"
         android:layout_centerHorizontal="true" />
 
-    <ImageView
+    <SurfaceView
         android:id="@+id/cameraImageView"
-        android:layout_width="145dp"
-        android:layout_height="140dp"
-        android:layout_alignBottom="@+id/makerImageView"
-        android:layout_alignRight="@+id/makerImageView"
-        android:layout_alignEnd="@+id/makerImageView"
-        android:layout_marginBottom="136dp"
-        android:visibility="invisible" />
+        android:layout_width="155dp"
+        android:layout_height="155dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="155dp"
+        android:layout_marginLeft="155dp" />
 
 </RelativeLayout>

@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.androidquery.AQuery;
@@ -57,6 +58,7 @@ public class ItemsAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.choose_gridview,null);
             itemView = new ItemView();
             itemView.imageView =  (ImageView) convertView.findViewById(R.id.imageView);
+            itemView.progressBar =  (ProgressBar) convertView.findViewById(R.id.progressBar);
             convertView.setTag(itemView);
         }else{
             itemView = (ItemView) convertView.getTag();
@@ -64,7 +66,8 @@ public class ItemsAdapter extends BaseAdapter {
         try {
 
             aq.id(itemView.imageView)
-                    .image(jsonItem.getString("cover"),true,true,0,0,null,AQuery.FADE_IN_NETWORK);
+                .progress(itemView.progressBar)
+                .image(jsonItem.getString("cover"),true,true,0,0,null,AQuery.FADE_IN_NETWORK,AQuery.RATIO_PRESERVE);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -77,5 +80,6 @@ public class ItemsAdapter extends BaseAdapter {
 
     class ItemView{
         ImageView imageView;
+        ProgressBar progressBar;
     }
 }
