@@ -167,7 +167,7 @@ public class Step2Activity extends Activity implements SurfaceHolder.Callback, C
                         ,waterMask.getWidth()/2,waterMask.getHeight()/2,false);
             Log.d("tui",String.valueOf(width));
 
-            comboImage.drawBitmap(waterMask,5,(maker.getHeight()- waterMask.getHeight()),null);
+            comboImage.drawBitmap(waterMask,5,-3,null);
 
             os = new FileOutputStream(new File(path,outputName));
             cs.compress(Bitmap.CompressFormat.JPEG, 80, os);
