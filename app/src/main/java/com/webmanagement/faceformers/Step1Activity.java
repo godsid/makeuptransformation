@@ -59,7 +59,7 @@ public class Step1Activity extends Activity {
             }
         });
 
-        aq.progress(R.id.progressBar)
+        aq.progress(progressBar)
                 .ajax("http://review.edtguide.com/ftm/items.php", JSONObject.class,0,new AjaxCallback<JSONObject>(){
             @Override
             public void callback(String url, JSONObject object, AjaxStatus status) {
