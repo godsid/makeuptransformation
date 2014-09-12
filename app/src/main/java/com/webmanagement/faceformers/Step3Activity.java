@@ -43,7 +43,7 @@ public class Step3Activity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step3);
-        ImageView imageView = (ImageView)findViewById(R.id.imageView);
+        ImageView imageView = (ImageView)findViewById(R.id.oneThree);
         ImageView btFBShare = (ImageView)findViewById(R.id.btFBShare);
 
         googleAnalytics = new MyGoogleAnalytics(this);

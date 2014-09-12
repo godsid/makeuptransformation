@@ -70,7 +70,7 @@ public class Step2Activity extends Activity implements SurfaceHolder.Callback, C
         //android.widget.FrameLayout.LayoutParams params = new android.widget.FrameLayout.LayoutParams(width, height);
 
         googleAnalytics = new MyGoogleAnalytics(this);
-        googleAnalytics.trackPage("take photo");
+        googleAnalytics.trackPage("take photo 1 to 3");
 
         outputName = "faceformers_"+DateTime.getCurrentTimeStamp("yyyy-MM-dd_HHmmss")+".jpg";
         Log.d("tui",outputName);

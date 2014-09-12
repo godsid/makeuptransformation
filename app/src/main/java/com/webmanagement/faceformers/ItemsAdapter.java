@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.androidquery.AQuery;
 
@@ -57,7 +56,7 @@ public class ItemsAdapter extends BaseAdapter {
         if(convertView==null){
             convertView = mInflater.inflate(R.layout.choose_gridview,null);
             itemView = new ItemView();
-            itemView.imageView =  (ImageView) convertView.findViewById(R.id.imageView);
+            itemView.imageView =  (ImageView) convertView.findViewById(R.id.oneThree);
             itemView.progressBar =  (ProgressBar) convertView.findViewById(R.id.progressBar);
             convertView.setTag(itemView);
         }else{
