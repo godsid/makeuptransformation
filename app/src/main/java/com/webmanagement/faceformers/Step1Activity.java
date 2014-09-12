@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.androidquery.AQuery;
@@ -19,6 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -48,14 +50,47 @@ public class Step1Activity extends Activity {
         chooseGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intentStep2 = new Intent(getApplicationContext(),Step2Activity.class);
-                try {
-                    intentStep2.putExtra("imageMask",itemsArrayList.get(position).getString("mask"));
-                    intentStep2.putExtra("imageTitle",itemsArrayList.get(position).getString("title"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                startActivity(intentStep2);
+
+                final int clickPosition = position;
+                final Dialog dialog = new Dialog(Step1Activity.this);
+                dialog.setContentView(R.layout.choose_dialog);
+                dialog.setTitle(R.string.choose_dialog_title);
+                dialog.show();
+
+                ImageView oneThree = (ImageView)dialog.findViewById(R.id.oneThree);
+                ImageView threeOne = (ImageView)dialog.findViewById(R.id.threeOne);
+
+                oneThree.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            Intent intentStep2 = new Intent(getApplicationContext(),Step2_1Activity.class);
+                            intentStep2.putExtra("imageMask",itemsArrayList.get(clickPosition).getString("mask"));
+                            intentStep2.putExtra("imageCover",itemsArrayList.get(clickPosition).getString("cover"));
+                            intentStep2.putExtra("imageTitle",itemsArrayList.get(clickPosition).getString("title"));
+                            startActivity(intentStep2);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        dialog.dismiss();
+                    }
+                });
+
+                threeOne.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            Intent intentStep2 = new Intent(getApplicationContext(),Step2Activity.class);
+                            intentStep2.putExtra("imageMask",itemsArrayList.get(clickPosition).getString("mask"));
+                            intentStep2.putExtra("imageCover",itemsArrayList.get(clickPosition).getString("cover"));
+                            intentStep2.putExtra("imageTitle",itemsArrayList.get(clickPosition).getString("title"));
+                            startActivity(intentStep2);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        dialog.dismiss();
+                    }
+                });
             }
         });
 
