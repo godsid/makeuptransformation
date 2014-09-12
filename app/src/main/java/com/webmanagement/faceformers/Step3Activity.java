@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.androidquery.AQuery;
 import com.google.android.gms.ads.AdListener;
@@ -108,18 +109,22 @@ public class Step3Activity extends Activity {
 
         PackageManager pm = getPackageManager();
         List<ResolveInfo> activityList = pm.queryIntentActivities(shareIntent, 0);
-
+        Boolean shared = false;
         for (final ResolveInfo app : activityList){
             Log.d("tui", app.activityInfo.name);
-            if ((app.activityInfo.name).contains("facebook.composer")){
+            if ((app.activityInfo.name).contains("com.facebook.katana")){
                 final ActivityInfo activity = app.activityInfo;
                 final ComponentName name = new ComponentName(activity.applicationInfo.packageName, activity.name);
                 shareIntent.addCategory(Intent.CATEGORY_LAUNCHER);
                 shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
                 shareIntent.setComponent(name);
                 startActivityForResult(shareIntent, SHARE_REQUEST_CODE);
+                shared = true;
                 break;
             }
+        }
+        if(shared==false){
+            startActivityForResult(Intent.createChooser(shareIntent, "Share to other App"), SHARE_REQUEST_CODE);
         }
     }
     private void shareTwitter(){
