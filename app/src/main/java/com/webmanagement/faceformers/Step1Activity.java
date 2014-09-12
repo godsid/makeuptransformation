@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -20,8 +21,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
+
 
 
 public class Step1Activity extends Activity {
@@ -95,7 +96,7 @@ public class Step1Activity extends Activity {
         });
 
         aq.progress(progressBar)
-                .ajax("http://review.edtguide.com/ftm/items.php", JSONObject.class,0,new AjaxCallback<JSONObject>(){
+                .ajax("http://review.edtguide.com/ftm/items.php", JSONObject.class,3600,new AjaxCallback<JSONObject>(){
             @Override
             public void callback(String url, JSONObject object, AjaxStatus status) {
                 JSONArray objectArray;
@@ -132,5 +133,28 @@ public class Step1Activity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void loaditemList(){
+        aq.progress(progressBar)
+            .ajax("http://review.edtguide.com/ftm/items.php", JSONObject.class, 0, new AjaxCallback<JSONObject>() {
+                @Override
+                public void callback(String url, JSONObject object, AjaxStatus status) {
+                    JSONArray objectArray;
+                    if (object != null) {
+                        try {
+                            objectArray = object.getJSONArray("items");
+                            for (int i = 0, j = objectArray.length(); i < j; i++) {
+                                Log.d("d", objectArray.getJSONObject(i).getString("cover"));
+                                itemsArrayList.add(objectArray.getJSONObject(i));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    itemAdapter.notifyDataSetChanged();
+
+                }
+            });
     }
 }
