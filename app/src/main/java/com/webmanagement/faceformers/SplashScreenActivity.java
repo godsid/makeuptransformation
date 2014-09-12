@@ -2,6 +2,8 @@ package com.webmanagement.faceformers;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -18,9 +20,16 @@ public class SplashScreenActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         TextView version = (TextView) findViewById(R.id.splash_version);
-        String beta = "";
 
-        //version.setText(Util.getAppVersionName(getApplicationContext())+beta);
+        try {
+            PackageInfo packageInfo = getPackageManager()
+                    .getPackageInfo(getPackageName(), 0);
+            version.setText(getString(R.string.version)+" "+packageInfo.versionName);
+
+        } catch (PackageManager.NameNotFoundException e) {
+            // should never happen
+            //throw new RuntimeException("Could not get package name: " + e);
+        }
 
         handler = new Handler();
 

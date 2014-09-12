@@ -6,8 +6,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.webmanagement.faceformers.Step1Activity"
-    android:background="@color/background">
+    tools:context="com.webmanagement.faceformers.Step2_1Activity">
 
     <ProgressBar
         style="?android:attr/progressBarStyleLarge"
@@ -17,25 +16,30 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
-    <GridView
-        android:layout_width="wrap_content"
+    <ImageView
+        android:id="@+id/makerImageView"
+        android:layout_width="fill_parent"
         android:layout_height="330dp"
-        android:id="@+id/chooseGridView"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <SurfaceView
+        android:id="@+id/cameraImageView"
+        android:layout_width="155dp"
+        android:layout_height="155dp"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:numColumns="3"
-        android:visibility="visible"
-        android:background="@color/background"
-        android:horizontalSpacing="5dp"
-        android:verticalSpacing="5dp" />
+        android:layout_alignTop="@+id/makerImageView"
+        android:layout_alignLeft="@+id/makerImageView"
+        android:visibility="invisible" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/oneThree"
-        android:src="@drawable/step1"
-        android:layout_below="@+id/chooseGridView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:src="@drawable/step2"
+        android:layout_below="@+id/makerImageView"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>
